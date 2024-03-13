@@ -224,8 +224,31 @@ test_that("Check that toJSONFile file works on character", {
 
 })
 
-test_that("Check that toJSONFile file works on matrix", {
-
+test_that("Check that fromVector works with NA", {
+  ppm <-1:10
+  ppm2 <- ppm
+  ppm[[3]] <- NA
+  model1 <- new("NMRSignalModel", signalsInput = list(signal1, signal2),
+               from = ppm[[1]],
+               to =  ppm[[10]],
+               ppm = ppm,
+               experimental = ppm2 * 3)
+  fileName <- "/tmp/model2.json"
+  # Hack the writeToJSON
+  file.create(fileName)
+  fileConn<-file(fileName, "wb")
+  toJSONFile(model1, control=c(no_xy=FALSE), con=fileConn)
+  close(fileConn)
+  
+  fileLines <-readLines(fileName, encoding="UTF-8")
+  fileConn<-file(fileName,"wb")
+  write(paste(fileLines, collapse = ""), fileConn, sep = "")
+  close(fileConn)
+  
+  
+  model1_resurrected <- fromVector( jsonlite::fromJSON(fileName, simplifyVector = FALSE))
+  
+  expect_equal(model1, model1_resurrected)
 })
 
 test_that("Check that writeToJSON and fromVector works for a NMRSignalModel", {
