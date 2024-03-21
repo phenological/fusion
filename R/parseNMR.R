@@ -78,11 +78,11 @@ parseNMR <- function(folder,
     }
 
 
-
     loe <- data.frame(dataPath = lop$dataPath,
                       sampleID = makeUnique(lop$sampleId),
                       sampleType = "sample",
-                      experiment = lop$experiment)
+                      experiment = lop$experiment,
+                      nmrFolderId = lop$pathId)
 
 
     # this should be take care of on rolodex in the future
