@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbind.r
 \name{rbind.dataElement}
 \alias{rbind.dataElement}
-\title{rbind dataElements}
+\title{Bind together multiple dataElement objects by rows.}
 \usage{
 \method{rbind}{dataElement}(...)
 }
@@ -13,5 +13,9 @@
 the information about dataElement
 }
 \description{
+This function takes a list of dataElement objects and binds them together
+by rows into a single dataElement object. It checks that the dataElements
+are compatible in terms of type and method before binding. The observation
+descriptions are concatenated and made unique where necessary.
 rbind dataElements
 }
