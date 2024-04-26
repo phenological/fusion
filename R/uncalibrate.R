@@ -3,12 +3,12 @@
 #' @return dataElements 
 #' @examples
 #' # dae<-local(get(load(~.daE)))
-#' #test<-unclibrate(data = dae)
+#' #test<-uncalibrate(data = dae)
 #' 
 #' @export
 #' 
 
-unclibrate<-function(data){
+uncalibrate<-function(data){
   tdf<-list()
   df<-data@.Data
   ppm<-as.numeric(data@varName)
