@@ -3,6 +3,8 @@
 #' @param A - first data.frame (acqus)
 #' @param B - second data.frame (qc)
 #' @param by - the name of the key column
+#' @importFrom data.table setDT
+#'
 #' @return a data.frame with qc matched to acqus
 
 # B <- data.frame(path = c(NA, NA, NA), value = c(10, 20, NA))
@@ -11,14 +13,14 @@
 # leftJoinWithAcqus(A, B, by = "path")
 
 leftJoinWithAcqus <- function(A, B, by) {
-  
+
   merged <- merge(A, B, by, all.x = TRUE, suffixes = c(".AAA",".BBB"))
   setDT(merged)
-  
+
   matched <- merged[,.SD,.SDcols = c(names(merged)[!grepl("acqus", names(merged))])]
-  
+
   setnames(matched, names(matched), gsub("\\.BBB$", "", names(matched)))
-  
+
   return(as.data.frame(matched))
 }
 
