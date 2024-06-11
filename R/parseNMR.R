@@ -4,6 +4,7 @@
 #' @export
 #' @importFrom nmr.parser scanFolder readExperiment
 #' @importFrom rldx rldx_get
+#' @importFrom utils menu
 # req <- rldx_get("link", "?runName=EXTr01")
 # folder <- req
 # parseNMR(folder)

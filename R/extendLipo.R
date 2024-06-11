@@ -2,6 +2,7 @@
 #' @param data - lipoprotein daE or other format such as data.frame
 #' @return 112 new column of either calc. (calculated values) or perc. (percentage)
 #' @importFrom nmr.parser extend_lipo
+#' @importFrom utils stack
 #' @examples
 #' #data<-local(get(load("~lipo.daE")))
 #' #extended_lipo<-extend_lipo(data)
