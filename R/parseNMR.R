@@ -13,7 +13,7 @@ parseNMR <- function(folder,
                      opts = list(what = c("spec"),
                                  projectName = "",
                                  cohortName = "",
-                                 runID = "",
+                                 runName = "",
                                  method = "",
                                  sampleMatrixType = "",
                                  specOpts = list(uncalibrate = FALSE,
@@ -70,8 +70,8 @@ parseNMR <- function(folder,
       opts$cohortName <- unique(lop$cohortName[!is.na(lop$cohortName)])[1]
     }
 
-    if (!("runID" %in% names(opts))) {
-      opts$runID <- unique(lop$runId[!is.na(lop$runId)])[1]
+    if (!("runName" %in% names(opts))) {
+      opts$runName <- unique(lop$runName[!is.na(lop$runName)])[1]
     }
 
     if (!("sampleMatrixType" %in% names(opts))) {
@@ -142,14 +142,14 @@ parseNMR <- function(folder,
     }
 
 
-    if (!("runID" %in% names(opts))) {
-      opts$runID <- ""
+    if (!("runName" %in% names(opts))) {
+      opts$runName <- ""
 
-      choice <- readline(prompt = "runID: ")
+      choice <- readline(prompt = "runName: ")
       choice <- nmr.parser::cleanNames(choice)
-      runID <- paste0(prefix, "r", "XX", choice)
+      runName <- paste0(prefix, "r", "XX", choice)
     } else {
-      opts$runID <- paste0(opts$runID, "@local")
+      opts$runName <- paste0(opts$runName, "@local")
     }
 
     if (!("sampleMatrixType" %in% names(opts))) {
@@ -516,7 +516,7 @@ parseNMR <- function(folder,
   fileName <- paste(c(opts$projectName,
                       opts$cohortName,
                       opts$sampleMatrixType,
-                      opts$runID,
+                      opts$runName,
                       opts$method), collapse = "_")
 
   assign(fileName, da)
