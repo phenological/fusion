@@ -80,7 +80,7 @@ parseNMR <- function(folder,
 
 
     loe <- data.frame(dataPath = lop$dataPath,
-                      sampleID = makeUnique(lop$sampleId),
+                      sampleID = makeUnique(lop$sampleName),
                       sampleType = "sample",
                       experiment = lop$experiment,
                       nmrFolderId = lop$pathId)
