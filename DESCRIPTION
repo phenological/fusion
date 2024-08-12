@@ -1,6 +1,6 @@
 Package: fusion
 Title: Fusion: Objects class definitions for metabolic profiling
-Version: 1.0.7
+Version: 1.0.8
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
@@ -25,7 +25,7 @@ Imports:
     jsonlite,
     rldx,
     nmr.parser (>= 0.2.4),
-Remotes: git::https://anpc.mylims.org/gitea/jul/rldx@0.0.6, github::phenological/nmr-parser
+Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.0.9, github::phenological/nmr-parser
 Depends: 
     R (>= 4.1)
 StagedInstall: no
