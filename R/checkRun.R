@@ -9,7 +9,9 @@
 #' if ltr = "sltr" meaning the plate has 0 ltr but 4 sltr per plate
 #' if ltr = "ltr" meaning the plate has 4 ltr and 0 sltr per plate
 #' if ltr = "none" meaning 0 ltr and 0 sltr per plate
+#' @importFrom utils strcapture
 #' @return tdf1 
+
 #' 
 #' first the expected samples per plate is gather from the run Layout. 
 #'    This must be matched with sample layout found in the configurationfile. 

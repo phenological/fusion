@@ -22,7 +22,6 @@ Imports:
     methods,
     crayon,
     data.table,
-    jsonlite,
     rldx,
     nmr.parser (>= 0.2.4),
 Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.0.9, github::phenological/nmr-parser
