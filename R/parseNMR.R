@@ -1,6 +1,6 @@
 #' reads all information from bruker folder structures
 #' @param folder - the root folder to read from
-#' @param opts - opts (what, specOpts(uncalibrate, fromTo, length.out))
+#' @param opts - opts (what, specOpts(procno, uncalibrate, fromTo, length.out))
 #' @export
 #' @importFrom nmr.parser scanFolder readExperiment
 #' @importFrom rldx rldx_get
@@ -16,7 +16,8 @@ parseNMR <- function(folder,
                                  runName = "",
                                  method = "",
                                  sampleMatrixType = "",
-                                 specOpts = list(uncalibrate = FALSE,
+                                 specOpts = list(procno = 1,
+                                                 uncalibrate = FALSE,
                                                  fromTo = c(-0.1, 10),
                                                  length.out = 44079),
                                  outputDir = ".")) {
@@ -345,7 +346,7 @@ parseNMR <- function(folder,
 
 
     excluded <- setdiff(arrayList[[1]], intersection)
-    
+
     if (length(excluded) > 0) {
       cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
     }
@@ -373,7 +374,7 @@ parseNMR <- function(folder,
 
 
     excluded <- setdiff(arrayList[[1]], intersection)
-    
+
     if (length(excluded) > 0) {
       cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
     }
@@ -394,16 +395,16 @@ parseNMR <- function(folder,
     idx <- match(lipo$lipo$path, intersection)
     lipo$lipo <- lipo$lipo[!is.na(idx),]
     dat <- dat[!is.na(idx),]
-    
+
     idx <- match(loe$dataPath, intersection)
     loe <- loe[!is.na(idx),]
-    
+
     excluded <- setdiff(arrayList[[1]], intersection)
-    
+
     if (length(excluded) > 0) {
       cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
     }
-    
+
   }
 
 
@@ -412,7 +413,7 @@ parseNMR <- function(folder,
     arrayList <- lapply(list(spec$spec$path,
                                acqus$acqus$path,
                                loe$dataPath), function(x) unlist(x))
-    
+
     intersection <- Reduce(intersect, arrayList)
 
 
@@ -433,7 +434,7 @@ parseNMR <- function(folder,
 
 
     excluded <- setdiff(arrayList[[1]], intersection)
-    
+
     if (length(excluded) > 0) {
       cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
     }
@@ -444,44 +445,44 @@ parseNMR <- function(folder,
 
   # PREPING TESTS & INFO #################################################
   # tests
-  
-  
+
+
   if (ivdr) {
     # else we make a left join
     rowName <- unname(unlist(qc[[1]]$path))
-    
+
     # we should not have duplicated column names here.
     # this has to be fixed in nmr.parser
     test_tests_name <- makeUnique(qc[[1]]$testNames[[1]])
-    
+
     test_tests_comment <- data.frame(do.call("rbind",
                                              lapply(qc[[1]]$tests,
                                                     function(x) x$comment)))
     colnames(test_tests_comment) <- test_tests_name
     test_tests_comment$path <- rowName
-    
+
     test_tests_comment <- leftJoinWithAcqus(acqus$acqus, test_tests_comment, by = "path")
-    
+
     test_tests_value <- data.frame(do.call("rbind",
                                            lapply(qc[[1]]$tests,
                                                   function(x) x$value)))
     colnames(test_tests_value) <- makeUnique(test_tests_name)
     test_tests_value$path <- rowName
-    
+
     test_tests_value <- leftJoinWithAcqus(acqus$acqus, test_tests_value, by = "path")
-    
+
     # infos
     test_infos_name <- makeUnique(qc[[1]]$infoNames[[1]])
-    
+
     test_infos_value <- data.frame(do.call("rbind",
                                            lapply(qc[[1]]$infos,
                                                   function(x) x$value)))
     colnames(test_infos_value) <- test_infos_name
     test_infos_value$path <- rowName
-    
+
     test_infos_value <- leftJoinWithAcqus(acqus$acqus, test_infos_value, by = "path")
   }
-  
+
   # CREATING DATAELEMENT #################################################
   if (ivdr) {
     info <- list("info" = loe,

@@ -16,7 +16,11 @@ makeUnique <- function(sampleID,
                        sep = "#",
                        fromFirst = FALSE,
                        reverse = FALSE,
-                       first = 1){
+                       first = 1,
+                       flagOnly = FALSE){
+  if (flagOnly) {
+    fromFirst <- TRUE
+  }
   if (fromFirst) {
     dup <-  duplicated(sampleID) |
       duplicated(sampleID, fromLast = TRUE)
@@ -36,6 +40,10 @@ makeUnique <- function(sampleID,
   }
   if (reverse) {
     sampleID <- rev(sampleID)
+  }
+  if (flagOnly) {
+    sampleID <- sapply(sampleID, function(x) strsplit(x, sep)[[1]][2])
+    sampleID[is.na(sampleID)] <- 1
   }
   return(sampleID)
 }
