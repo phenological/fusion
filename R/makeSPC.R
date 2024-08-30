@@ -21,7 +21,7 @@ makeSPC<-function(da,calibrate =TRUE){
     stop("input data must be a NMR dataElement")
   }
 
-  if(!grepl("ivdr",da@method)){
+  if(!grepl("ivdr|dire|pgpe",da@method)){
     stop("input data must be a NMR dataElement with method .ivdr ")
   }  
   
@@ -47,7 +47,7 @@ makeSPC<-function(da,calibrate =TRUE){
   spec = spec[,-idx]
   ppm = ppm[-idx]
   rm(idx)
-  spec<-baselineCorrection(spec)
+  spec<-nmr.spectra.processing::baselineCorrection(spec)
   # check the 180 fllip
   idx<-which(apply(spec[,which(ppm>=3.2 & ppm<=3.3)],1,sum)<0)
   if(length(idx)>0){
