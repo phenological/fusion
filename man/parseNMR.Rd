@@ -6,9 +6,9 @@
 \usage{
 parseNMR(
   folder,
-  opts = list(what = c("spec"), projectName = "", cohortName = "", runID = "", method =
-    "", sampleMatrixType = "", specOpts = list(uncalibrate = FALSE, fromTo = c(-0.1, 10),
-    length.out = 44079), outputDir = ".")
+  opts = list(what = c("spec"), projectName = "", cohortName = "", runName = "", method =
+    "", sampleMatrixType = "", specOpts = list(procno = 1, uncalibrate = FALSE, fromTo =
+    c(-0.1, 10), length.out = 44079), outputDir = ".")
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ parseNMR(
 }}
 
 \item{opts}{\itemize{
-\item opts (what, specOpts(uncalibrate, fromTo, length.out))
+\item opts (what, specOpts(procno, uncalibrate, fromTo, length.out))
 }}
 }
 \description{

@@ -1,4 +1,4 @@
-#' function to calculate ASCVD risk 
+#' function to calculate ASCVD risk
 #'
 #' @param Gender character either "F" female or "M" male
 #' @param Ethnicity_African True or False
@@ -13,8 +13,10 @@
 #'
 #' @references https://pubmed.ncbi.nlm.nih.gov/24222018/
 #' @references https://clincalc.com/Cardiology/ASCVD/PooledCohort.aspx
-#' 
-#' @example calcASCVD(Gender = "M",Ethnicity_African = TRUE,HypertensionMeds = FALSE,Age = 55, TPCH = 213, HDCH = 50,SBP = 120)
+#'
+#' @examples
+#'
+#' risk <- calcASCVD(Gender = "M", Ethnicity_African = TRUE, HypertensionMeds = FALSE, Age = 55, TPCH = 213, HDCH = 50, SBP = 120)
 #' @export
 #'
 
@@ -34,7 +36,7 @@ calcASCVD <- function(Gender = c("F", "M"),
                              # in mg/dl
                              HDCH = NULL,
                              # in mg/dl
-                             SBP = NULL)# in mmHg 
+                             SBP = NULL)# in mmHg
 {
   if (!Gender %in% c("F", "M")) {
     stop("Gender needs to be specified as F or M only")
@@ -52,49 +54,49 @@ calcASCVD <- function(Gender = c("F", "M"),
   TPCH<-as.numeric(TPCH)
   if(as.numeric(HDCH)<20){
     stop("HDCH must be numeric and above 20 mg/dl")
-  } 
+  }
   HDCH<-as.numeric(HDCH)
   if(as.numeric(SBP)<90){
     stop("SBP must be numeric and above 90 mmHg")
-  }  
+  }
   SBP<-as.numeric(SBP)
   if(HypertensionMeds=="TRUE"){
     HypertensionMeds<-1
   }else{
     HypertensionMeds<-0
-  } 
+  }
   if(Smoking=="TRUE"){
     Smoking<-1
   }else{
     Smoking<-0
-  } 
-  
+  }
+
   if(DM=="TRUE"){
     DM<-1
   }else{
     DM<-0
-  } 
-  
-  Coef_Table <- as.data.frame(setNames(data.frame(matrix(NA, nrow = 1, ncol = 17)), 
-                                 c("Ln Age", 
-                                   "Ln Age sq", 
-                                   "Ln TPCH (mg/dl)", 
-                                   "Ln Age * Ln TPCH", 
-                                   "Ln HDCH (mg/dl)", 
-                                   "Ln Age* Ln HDCH", 
-                                   "Log Treated SBP (mmHg)", 
-                                   "Log Age * Log Treated SBP", 
-                                   "Log Untreated SBP (mmHg)", 
-                                   "Log Age * Log Untreated SBP", 
-                                   "Current Smoker (1 = Yes, 0 = No)", 
-                                   "Log Age * Current Smoker", 
-                                   "Diabetes (1 = Yes, 0 = No)", 
-                                   "Individual Sum", 
-                                   "Mean (Coeff * Val)", 
-                                   "Baseline Survival", 
+  }
+
+  Coef_Table <- as.data.frame(setNames(data.frame(matrix(NA, nrow = 1, ncol = 17)),
+                                 c("Ln Age",
+                                   "Ln Age sq",
+                                   "Ln TPCH (mg/dl)",
+                                   "Ln Age * Ln TPCH",
+                                   "Ln HDCH (mg/dl)",
+                                   "Ln Age* Ln HDCH",
+                                   "Log Treated SBP (mmHg)",
+                                   "Log Age * Log Treated SBP",
+                                   "Log Untreated SBP (mmHg)",
+                                   "Log Age * Log Untreated SBP",
+                                   "Current Smoker (1 = Yes, 0 = No)",
+                                   "Log Age * Current Smoker",
+                                   "Diabetes (1 = Yes, 0 = No)",
+                                   "Individual Sum",
+                                   "Mean (Coeff * Val)",
+                                   "Baseline Survival",
                                    "Estimated 10Y risk of hard ASCVD")))
-  
-  
+
+
   if (Gender == "F" & Ethnicity_African==FALSE) {
     Coef<-Coef_Table
     Coef[1,]<-c(-29.799,4.884,13.540,-3.114,-13.578,3.149,2.019,0,1.957,0,7.574,-1.665,0.661,0,-29.18,0.9665,0)
@@ -121,7 +123,7 @@ calcASCVD <- function(Gender = c("F", "M"),
       (Coef$`Current Smoker (1 = Yes, 0 = No)` * Smoking) +
       (Coef$`Log Age * Current Smoker` * Smoking) +
       (Coef$`Diabetes (1 = Yes, 0 = No)` * DM)
-    
+
     if (HypertensionMeds==1) {
       Terms = Terms + (Coef$`Log Treated SBP (mmHg)` * log(SBP)) +
         (Coef$`Log Age * Log Treated SBP` * log(SBP))
@@ -131,7 +133,7 @@ calcASCVD <- function(Gender = c("F", "M"),
         (Coef$`Log Age * Log Untreated SBP` * log(SBP))
       ASCVD_risk<-1-Coef$`Baseline Survival`^exp(Terms-Coef$`Mean (Coeff * Val)`)
     }
-    
+
   }else{
     Terms = (Coef$`Ln Age`*log(Age))+
       (Coef$`Ln TPCH (mg/dl)`*log(TPCH))+
@@ -140,7 +142,7 @@ calcASCVD <- function(Gender = c("F", "M"),
       (Coef$`Current Smoker (1 = Yes, 0 = No)` * Smoking) +
       (Coef$`Log Age * Current Smoker` * Smoking) +
       (Coef$`Diabetes (1 = Yes, 0 = No)` * DM)
-    
+
     if (HypertensionMeds==1) {
       Terms = Terms + (Coef$`Log Treated SBP (mmHg)` * log(SBP))
       ASCVD_risk<-1-Coef$`Baseline Survival`^exp(Terms-Coef$`Mean (Coeff * Val)`)
@@ -148,8 +150,8 @@ calcASCVD <- function(Gender = c("F", "M"),
       Terms = Terms + (Coef$`Log Untreated SBP (mmHg)` * log(SBP))
       ASCVD_risk<-1-Coef$`Baseline Survival`^exp(Terms-Coef$`Mean (Coeff * Val)`)
     }
-    
-    
+
+
   }
   ASCVD_risk = round((ASCVD_risk)*100,1)
   return(ASCVD_risk)
