@@ -49,11 +49,11 @@ checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
   loe_names<-loe_names[grepl("noesy|cpmg|zggppezf", loe_names)]
   i<-loe_names[grep("noesy",loe_names)]
   tdf = loe[[i]]
-  tdf <-tdf[, which(colnames(tdf) %in% c("dataPath","experiment","sampleId"))]
+  tdf <-tdf[, which(colnames(tdf) %in% c("dataPath","experiment","sampleName"))]
   tdf$plateID<-sapply(strsplit(tdf$dataPath,"/"),"[",6)
   tdf$plateID<-sapply(strsplit(tdf$plateID,"_"),"[",6)
   tdf$EXPNO<-sapply(strsplit(tdf$dataPath,"/"),"[",7)
-  tdf$check = paste0(tdf$plateID,"/",tdf$EXPNO,"-",tdf$sampleId)    
+  tdf$check = paste0(tdf$plateID,"/",tdf$EXPNO,"-",tdf$sampleName)    
   # tdf <-tdf[-grep("ltr",tdf$sampleId,ignore.case = T), which(colnames(tdf) %in% c("dataPath","experiment","sampleId"))]
   names(tdf)[2]<-i
   tdf1<-merge(expected,tdf,
@@ -61,7 +61,7 @@ checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
               by.y = "check",
               all = T)
   rm(tdf)
-  tdf1<-tdf1[!is.na(tdf1$sampleID),]
+  tdf1<-tdf1[!is.na(tdf1$sampleName),]
   
   qc <-readExperiment(loe$noesygppr1d$dataPath, list(what = c("acqus")))
   
@@ -117,7 +117,7 @@ checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
   if(length(grep("cpmg",loe_names))>0){
     i<-loe_names[grep("cpmg",loe_names)]
     tdf = loe[[i]]
-    tdf <-tdf[-grep("ltr",tdf$sampleId,ignore.case = T), which(colnames(tdf) %in% c("dataPath","experiment","sampleId"))]
+    tdf <-tdf[-grep("ltr",tdf$sampleName,ignore.case = T), which(colnames(tdf) %in% c("dataPath","experiment","sampleName"))]
     names(tdf)[2]<-i
     
     parts <- strcapture("(.*/)(\\d+)$", tdf$dataPath, proto = list(prefix="", number=""))
@@ -136,10 +136,10 @@ checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
   if(length(grep("zggppezf",loe_names))>0){
     i<-loe_names[grep("zggppezf",loe_names)]
     tdf = loe[[i]]
-    tdf <-tdf[-grep("ltr",tdf$sampleId,ignore.case = T), which(colnames(tdf) %in% c("dataPath","experiment","sampleId"))]
+    tdf <-tdf[-grep("ltr",tdf$sampleName,ignore.case = T), which(colnames(tdf) %in% c("dataPath","experiment","sampleName"))]
     names(tdf)[2]<-i        
     parts <- strcapture("(.*/)(\\d+)$", tdf$dataPath, proto = list(prefix="", number=""))
-    # Decrease the last digit by 1
+    # Decrease the last digit by 2
     last_number_decreased <- as.numeric(parts$number) - 2
     # Concatenate the parts back together
     tdf$dataPath <- paste0(parts$prefix, last_number_decreased)
@@ -152,9 +152,9 @@ checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
   }
 
   # remove the ltr/sltrs 
-  tdf1<-tdf1[which(!is.na(tdf1$sampleID)),]
+  tdf1<-tdf1[which(!is.na(tdf1$sampleName)),]
   tdf1$reruns<-"No"
-  tdf1$reruns[which(duplicated(tdf1$sampleID)==TRUE)]<-"Yes"
+  tdf1$reruns[which(duplicated(tdf1$sampleName)==TRUE)]<-"Yes"
   
   return(tdf1)
 }
