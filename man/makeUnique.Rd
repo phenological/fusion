@@ -4,7 +4,14 @@
 \alias{makeUnique}
 \title{function to make ID unique}
 \usage{
-makeUnique(sampleID, sep = "#", fromFirst = FALSE, reverse = FALSE, first = 1)
+makeUnique(
+  sampleID,
+  sep = "#",
+  fromFirst = FALSE,
+  reverse = FALSE,
+  first = 1,
+  flagOnly = FALSE
+)
 }
 \arguments{
 \item{sampleID}{sampleID}
