@@ -1,6 +1,6 @@
 #' reads all information from bruker folder structures
 #' @param folder - the root folder to read from
-#' @param opts - opts (what, specOpts(procno, uncalibrate, fromTo, length.out))
+#' @param opts - opts (what(spec, brxlipo, prxpacs, brxsm, spcglyc), specOpts(procno, uncalibrate, fromTo, length.out))
 #' @export
 #' @importFrom nmr.parser scanFolder readExperiment
 #' @importFrom rldx rldx_get
@@ -22,6 +22,7 @@ parseNMR <- function(folder,
                                                  length.out = 44079),
                                  outputDir = ".")) {
   .SD <- NULL
+  noWrite <- FALSE
 
   ########################################################################
   # CONFIGURATION
@@ -34,6 +35,14 @@ parseNMR <- function(folder,
 
   if (!("what" %in% names(opts))) {
     opts$what <- "spec"
+  }
+
+  # if spcglyc spectra must be read first
+  if (opts$what == "spcglyc") {
+    opts$what <- "spec"
+    spcglyc <- TRUE
+  } else {
+    spcglyc <- FALSE
   }
 
 
@@ -101,6 +110,17 @@ parseNMR <- function(folder,
     loe$sampleType[idx] <- "qc"
 
 
+
+  } else if ("dataPath" %in% names(folder)) {
+
+    # CASE WHERE WE USE DIRECT PATH ######################################
+
+    loe <- data.frame(dataPath = folder$dataPath,
+                      sampleID = "sampleID_",
+                      sampleType = "sampleType_",
+                      experiment = "experiment_")
+    noWrite = TRUE
+    opts$specOpts$uncalibrate = TRUE
 
   } else {
 
@@ -257,6 +277,61 @@ parseNMR <- function(folder,
     }
   }
 
+  if (spcglyc) {
+
+    idx = c(which(ppm >= 4.6 & ppm <= 4.85),
+            which(ppm >= min(ppm) & ppm <= 0.4),
+            which(ppm >= 9.5 & ppm <= max(ppm)))
+
+
+
+    trimmedSpectra <- dat[,-idx, drop = FALSE]
+    trimmedPpm <- ppm[-idx]
+
+    trimmedSpectra <- baseline.corr(trimmedSpectra)
+    trimmedSpectra <- data.frame(trimmedSpectra)
+
+    # check for 180 flip
+    idx <- which(apply(trimmedSpectra[, which(trimmedPpm >= 3.2 & trimmedPpm <= 3.3)],
+                       1, sum) < 0)
+
+    if(length(idx) > 0){
+      trimmedSpectra[idx,] <- -trimmedSpectra[idx,]
+    }
+
+
+    # SPC
+    dat <- data.frame(
+      SPC_All = apply(
+        trimmedSpectra[, which((trimmedPpm > 3.18) & ( trimmedPpm < 3.32))], 1, sum
+      ),
+      SPC3 = apply(
+        trimmedSpectra[, which((trimmedPpm > 3.262) & ( trimmedPpm < 3.3))], 1, sum
+      ),
+      SPC2 = apply(
+        trimmedSpectra[, which((trimmedPpm >= 3.236) & ( trimmedPpm < 3.262))], 1, sum
+      ),
+      SPC1 = apply(
+        trimmedSpectra[, which((trimmedPpm >= 3.2) & ( trimmedPpm < 3.236))], 1, sum
+      ),
+      Glyc_All = apply(
+        trimmedSpectra[, which((trimmedPpm > 2.050) & ( trimmedPpm < 2.118))], 1, sum
+      ),
+      GlycA = apply(
+        trimmedSpectra[, which((trimmedPpm > 2.050) & ( trimmedPpm < 2.089))], 1, sum
+      ),
+      GlycB = apply(
+        trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
+      )
+    )
+
+    dat$SPC3_2 <- dat$SPC3 / dat$SPC2
+    dat$SPC_Glyc <- dat$SPC_All / dat$Glyc_All
+    varName <- colnames(dat)
+
+    type = "QUANT"
+  }
+
   if ("brxlipo" %in% opts$what) {
 
     lipo <- readExperiment(loe$dataPath, list(what = c("lipo")))
@@ -411,8 +486,8 @@ parseNMR <- function(folder,
   if ("spec" %in% opts$what) {
 
     arrayList <- lapply(list(spec$spec$path,
-                               acqus$acqus$path,
-                               loe$dataPath), function(x) unlist(x))
+                             acqus$acqus$path,
+                             loe$dataPath), function(x) unlist(x))
 
     intersection <- Reduce(intersect, arrayList)
 
@@ -505,6 +580,7 @@ parseNMR <- function(folder,
                     collapse = "; ")
 
 
+  if (!noWrite) {
   # create dataElement
   da <- new("dataElement",
             .Data = dat,
@@ -522,10 +598,16 @@ parseNMR <- function(folder,
 
   assign(fileName, da)
 
+
   save(list=(fileName),
        file = file.path(opts$outputDir, paste0(fileName, ".daE")))
   txt <- paste0("daE can be loaded as var <- local(get(load(\"",
                 file.path(".", paste0(fileName, ".daE\"")),
                 "))) to rename them on the fly")
   message(cat(crayon::blue(txt)))
+  } else {
+
+    return(dat)
+
+  }
 }

@@ -1,6 +1,6 @@
 Package: fusion
 Title: Fusion: Objects class definitions for metabolic profiling
-Version: 1.0.8
+Version: 1.0.9
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
     testthat
 URL: https://github.com/phenological/fusion

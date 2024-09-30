@@ -7,7 +7,7 @@
 #            opts = list(what = c("brxlipo"),
 #                        projectName = "covid19",
 #                        cohortName = "mauritius",
-#                        runID = "COVr49",
+#                        runName = "COVr49",
 #                        method = "noesy",
 #                        sampleMatrixType = "SER",
 #                        specOpts = list(uncalibrate = FALSE,
@@ -39,6 +39,92 @@
 #   expect_equal(as.numeric(var[134,112]), 15.99)
 #
 # })
+#
+# test_that("test parsing spcglyc anpc from local folders", {
+#
+#   folder <- c("~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
+#               "~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
+#
+#   parseNMR(folder,
+#            opts = list(what = c("spcglyc"),
+#                        projectName = "covid19",
+#                        cohortName = "mauritius",
+#                        runName = "COVr49",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = FALSE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "."))
+#
+#   var <- local(get(load("./covid19_mauritius_SER_COVr49@local_noesy@prof-plasma-noesy.daE")))
+#
+#
+#   expect_equal(nrow(var), 134)
+#   expect_equal(ncol(var), 9)
+#   expect_length(var@obsDescr, 6)
+#   expect_equal(names(var@obsDescr$test_tests_value)[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr$test_tests_value), 23)
+#   expect_equal(names(var@obsDescr[[5]])[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr[[5]]), 23)
+#   expect_equal(names(var@obsDescr[[6]])[23], "lb-test")
+#   expect_length(names(var@obsDescr[[6]]), 25)
+#   expect_equal(var@obsDescr[[2]]$ereticFactor[2], 3731.2157)
+#   expect_equal(var@obsDescr[[1]]$sampleID[1], "COV17110")
+#   expect_equal(var@obsDescr[[1]]$dataPath[1], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10")
+#   expect_equal(as.numeric(var[1,1]), 21969.7195)
+#   expect_equal(as.numeric(var[1,9]), 30.720518)
+#   expect_equal(var@obsDescr[[1]]$sampleID[134], "sltr#7")
+#   expect_equal(var@obsDescr[[1]]$dataPath[134], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/90")
+#   expect_equal(as.numeric(var[134,1]), 17971.6843)
+#   expect_equal(as.numeric(var[134,9]), 1.0758759)
+#
+# })
+
+
+# test_that("test parsing spcglyc anpc from local folders", {
+#
+#   f <- rldx_get(service = "http://localhost:22842/binder", "nmrLink", "/1")
+#
+#   folder <- data.frame(dataPath = "~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10")
+#
+#   parseNMR(folder,
+#            opts = list(what = c("spcglyc"),
+#                        projectName = "covid19",
+#                        cohortName = "mauritius",
+#                        runName = "COVr49",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = FALSE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "."))
+#
+#   var <- local(get(load("./covid19_mauritius_SER_COVr49@local_noesy@prof-plasma-noesy.daE")))
+#
+#
+#   expect_equal(nrow(var), 134)
+#   expect_equal(ncol(var), 9)
+#   expect_length(var@obsDescr, 6)
+#   expect_equal(names(var@obsDescr$test_tests_value)[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr$test_tests_value), 23)
+#   expect_equal(names(var@obsDescr[[5]])[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr[[5]]), 23)
+#   expect_equal(names(var@obsDescr[[6]])[23], "lb-test")
+#   expect_length(names(var@obsDescr[[6]]), 25)
+#   expect_equal(var@obsDescr[[2]]$ereticFactor[2], 3731.2157)
+#   expect_equal(var@obsDescr[[1]]$sampleID[1], "COV17110")
+#   expect_equal(var@obsDescr[[1]]$dataPath[1], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10")
+#   expect_equal(as.numeric(var[1,1]), 21969.7195)
+#   expect_equal(as.numeric(var[1,9]), 30.720518)
+#   expect_equal(var@obsDescr[[1]]$sampleID[134], "sltr#7")
+#   expect_equal(var@obsDescr[[1]]$dataPath[134], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/90")
+#   expect_equal(as.numeric(var[134,1]), 17971.6843)
+#   expect_equal(as.numeric(var[134,9]), 1.0758759)
+#
+# })
+
+
 #
 # test_that("test parsing lipo anpc from rolodex link", {
 #
@@ -195,11 +281,11 @@
 #                                        im = TRUE),
 #                        outputDir = "."))
 #   var <- local(get(load("./covvax2_C4_SER_VAXrXX@local_brxlipo.daE")))
-#   
+#
 #   expect_equal(nrow(var), 267)
 #   expect_equal(ncol(var), 112)
 #   expect_length(var@obsDescr, 3)
-#   
+#
 # })
-# 
-# 
+#
+#

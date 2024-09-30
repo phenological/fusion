@@ -17,7 +17,7 @@ parseNMR(
 }}
 
 \item{opts}{\itemize{
-\item opts (what, specOpts(procno, uncalibrate, fromTo, length.out))
+\item opts (what(spec, brxlipo, prxpacs, brxsm, spcglyc), specOpts(procno, uncalibrate, fromTo, length.out))
 }}
 }
 \description{
