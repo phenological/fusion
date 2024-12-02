@@ -29,7 +29,7 @@ Imports:
     reshape2
 Remotes: git::https://takecare.mylims.org/gitea/jul/rldx, 
     phenological/nmr-parser,
-    phenological/ms.parser,
+    phenological/ms-parser,
 Depends: 
     R (>= 4.1)
 StagedInstall: no
