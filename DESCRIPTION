@@ -25,13 +25,12 @@ Imports:
     data.table,
     rldx,
     nmr.parser (>= 0.2.4),
-<<<<<<< HEAD
-Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.1.0, github::phenological/nmr-parser
-=======
+
+Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.1.0, 
+    github::phenological/nmr-parser
     ms.parser,
     reshape2
-Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.0.9, github::phenological/nmr-parser
->>>>>>> 223798a3894c69ea59b4dc61fa9283bd3472f13c
+
 Depends: 
     R (>= 4.1)
 StagedInstall: no
