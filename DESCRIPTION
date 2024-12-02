@@ -24,13 +24,12 @@ Imports:
     crayon,
     data.table,
     rldx,
-    nmr.parser (>= 0.2.4),
+    nmr.parser,
     ms.parser,
     reshape2
 Remotes: git::https://takecare.mylims.org/gitea/jul/rldx, 
-    phenological/nmr-parser
-    ms.parser,
-    reshape2
+    phenological/nmr-parser,
+    phenological/ms.parser,
 Depends: 
     R (>= 4.1)
 StagedInstall: no
