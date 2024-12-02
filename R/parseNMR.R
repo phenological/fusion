@@ -54,7 +54,7 @@ parseNMR <- function(folder,
   } else {
     spcglyc <- FALSE
   }
-  
+
   if (!("outputDir" %in% names(opts))) {
     opts$outputDir <- "."
   }
@@ -299,21 +299,21 @@ parseNMR <- function(folder,
     if(length(idx) > 0){
       trimmedSpectra[idx,] <- -trimmedSpectra[idx,]
     }
-    
+
     tsp <- do.call("rbind",
                  lapply(spec$spec$spec,function(s){
                    ppm <-s$spec$x
                    y <- s$spec$y
-                   
+
                    y[(ppm >= min(ppm) & ppm <= 0.5)]
-                   
+
       }))
     colnames(tsp) <- ppm[(ppm >= min(ppm) & ppm <= 0.5)]
 
-    
+
     spc <- trimmedSpectra[,which((trimmedPpm > 3.18) & ( trimmedPpm < 3.32))]
     colnames(spc) <- trimmedPpm[which((trimmedPpm > 3.18) & ( trimmedPpm < 3.32))]
-    
+
     glyc <- trimmedSpectra[which((trimmedPpm > 2.050) & ( trimmedPpm < 2.118))]
     colnames(glyc) <- trimmedPpm[which((trimmedPpm > 2.050) & ( trimmedPpm < 2.118))]
 
@@ -347,6 +347,10 @@ parseNMR <- function(folder,
     varName <- colnames(dat)
     opts$method <- "spcglyc"
     type = "QUANT"
+
+    # we correct for 3mm tubes
+    idx <- which(grepl("3mm", tolower(loe$dataPath)))
+    dat[idx, ] <- dat[idx, ] / 2
   }
 
   if ("brxlipo" %in% opts$what) {
@@ -583,17 +587,17 @@ parseNMR <- function(folder,
                  "test_tests_comment" = test_tests_comment,
                  "test_tests_value" = test_tests_value,
                  "test_infos_value" = test_infos_value)
-  } 
-  
+  }
+
   if(opts$method=="spcglyc"){
-    
+
     info <- list("info" = loe,
                  "procs" = procs,
                  "params" = acqus$acqus,
                  "tsp" = tsp,
                  "spc" = spc,
                  "glyc" = glyc)
-    
+
   }else {
     info <- list("info" = loe,
                  "procs" = procs,
@@ -635,7 +639,9 @@ parseNMR <- function(folder,
   message(cat(crayon::blue(txt)))
   } else {
 
-    return(dat)
+    res <- cbind(dataPath = loe$dataPath, dat)
+
+    return(res)
 
   }
 }
