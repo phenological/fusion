@@ -27,7 +27,7 @@ Imports:
     nmr.parser (>= 0.2.4),
     ms.parser,
     reshape2
-Remotes: git::https://takecare.mylims.org/gitea/jul/rldx@0.1.0, 
+Remotes: git::https://takecare.mylims.org/gitea/jul/rldx, 
     github::phenological/nmr-parser
     ms.parser,
     reshape2
