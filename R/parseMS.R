@@ -1,7 +1,7 @@
 #' parseMS
 #'
 #' @param folder Either character (file path) to folder/file or a data frame from a mass spec rolodex.
-#' @param assay character for mass spec assay. Must be one of "AA", "TRY", "BA", "SCFA".
+#' @param assay character for mass spec assay. Must be one of "ddhN", "AA", "TRY", "BA", "SCFA".
 #' @param fileType character for file type if folder argument is a path to a folder/file.
 #' Must be "txt", "tsv" or "xml".
 #' @param optns List for extra arguments
