@@ -9,7 +9,7 @@ parseMS(folder, assay, fileType = NULL, optns = list())
 \arguments{
 \item{folder}{Either character (file path) to folder/file or a data frame from a mass spec rolodex.}
 
-\item{assay}{character for mass spec assay. Must be one of "AA", "TRY", "BA", "SCFA".}
+\item{assay}{character for mass spec assay. Must be one of "ddhN", "AA", "TRY", "BA", "SCFA".}
 
 \item{fileType}{character for file type if folder argument is a path to a folder/file.
 Must be "txt", "tsv" or "xml".}
