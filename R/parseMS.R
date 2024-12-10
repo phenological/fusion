@@ -202,18 +202,25 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
         # Append the numeric part to sampleID and break out of the loop
         df$sampleID[id] <- paste0(df$sampleID[id], "#", df$plateExperimentID[id])
       }
-      # # Loop through each duplicated sampleID and modify it
-      # for (id in idx) {
-      #   # Split AnalysisName by underscore
-      #   parts <- strsplit(df$AnalysisName[id], "_")[[1]]
-      #   end <- length(parts)
-      #   num_part <- suppressWarnings(as.integer(parts[end]))
-      #   if (is.na(num_part)) {
-      #     # Append the numeric part to sampleID and break out of the loop
-      #     df$sampleID[id] <- paste0(df$sampleID[id], ".", parts[end])
-      #   }
-      #
-      # }
+
+    }
+
+    #any duplicates left
+    idx <- which(duplicated(df[["sampleID"]]) |
+                   duplicated(df[["sampleID"]], fromLast = TRUE))
+    for (id in idx) {
+    # Loop through each duplicated sampleID and modify it
+    for (id in idx) {
+      # Split AnalysisName by underscore
+      parts <- strsplit(df$AnalysisName[id], "_")[[1]]
+      end <- length(parts)
+      num_part <- suppressWarnings(as.integer(parts[end]))
+      if (is.na(num_part)) {
+        # Append the rerun part to sampleID and break out of the loop
+        df$sampleID[id] <- paste0(df$sampleID[id], ".", parts[end])
+      }
+
+    }
     }
 
     #are there duplicates left, print them
@@ -227,14 +234,6 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
   }
 
   reference_sampleID <- obsDescr[[1]]$sampleID
-
-  #######make .Data########
-  # idx <- which(result$paramName == "Quantity")
-  # newData <- dcast(result[ idx,],
-  #                  AnalysisName + sampleID ~ AnalyteName,
-  #                  value.var = "paramValue")
-  # Assuming `obsDescr` is a list of data frames or named list
-  # Each entry has `AnalyteName`, `Quantity`, and `sampleID`.
 
   # Create an empty list to store the data
   data_list <- lapply(obsDescr, function(obs) {
