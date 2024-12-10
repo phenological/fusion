@@ -22,7 +22,7 @@ remotes::install_github("phenological/nmr-parser@0.1.9")
 You can install the released version of fusion from github:
 
 ``` r
-devtools::install_github("jwist/fusion")
+devtools::install_github("phenological/fusion")
 ```
 
 ### post-installation 
