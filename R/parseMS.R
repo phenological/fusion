@@ -33,13 +33,16 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
   }
 
   #####fileType#####
-  if(tolower(fileType) == "xml"){
-    pattern = "\\.xml$"
-  }else if(tolower(fileType) == "txt"){
-    pattern = "\\.TXT$"
-  }else if(tolower(fileType) == "tsv"){
-    pattern = "\\.TSV$"
-  }else{stop("must provide the fileType argument correctly")}
+
+  if(is(folder)[1] == "character"){
+    if(tolower(fileType) == "xml"){
+      pattern = "\\.xml$"
+    }else if(tolower(fileType) == "txt"){
+      pattern = "\\.TXT$"
+    }else if(tolower(fileType) == "tsv"){
+      pattern = "\\.TSV$"
+    }else{stop("must provide the fileType argument correctly")}
+  }
 
   ####read#####
   if(is(folder)[1] != "data.frame" && is(folder)[1] == "character"){
