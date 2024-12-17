@@ -225,6 +225,19 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
 
     }
     }
+    #any duplicated left add plateID
+    idx <- which(duplicated(df[["sampleID"]]) |
+                   duplicated(df[["sampleID"]], fromLast = TRUE))
+    if(length(idx) > 0){
+
+      for (id in idx) {
+        # Append the numeric part to sampleID and break out of the loop
+        df$sampleID[id] <- paste0(df$sampleID[id], "#", df$plateID[id])
+      }
+
+    }
+
+
 
     #are there duplicates left, print them
     idx <- which(duplicated(df[["sampleID"]]) |
