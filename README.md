@@ -13,7 +13,7 @@ Fusion aim at providing a structure to data produce for metabolic profiling or p
 You will need to manually install two dependencies:
 
 ```r
-remotes::install_url("https://takecare.mylims.org/gitea/jul/rldx/archive/main.tar.gz")
+remotes::install_url("https://134.115.48.123/gitea/jul/rldx/archive/main.tar.gz")
 
 remotes::install_github("phenological/nmr-parser@0.1.9")
 ```

@@ -351,6 +351,7 @@ parseNMR <- function(folder,
     # we correct for 3mm tubes
     idx <- which(grepl("3mm", tolower(loe$dataPath)))
     dat[idx, ] <- dat[idx, ] / 2
+
   }
 
   if ("brxlipo" %in% opts$what) {

@@ -1,6 +1,6 @@
 Package: fusion
 Title: Fusion: Objects class definitions for metabolic profiling
-Version: 1.0.9
+Version: 1.1.0
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
@@ -27,7 +27,7 @@ Imports:
     nmr.parser,
     ms.parser,
     reshape2
-Remotes: git::https://takecare.mylims.org/gitea/jul/rldx, 
+Remotes: git::https://134.115.48.123/gitea/jul/rldx, 
     phenological/nmr-parser,
     phenological/ms-parser,
 Depends: 
