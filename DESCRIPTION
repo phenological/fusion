@@ -23,12 +23,10 @@ Imports:
     methods,
     crayon,
     data.table,
-    rldx,
     nmr.parser,
     ms.parser,
     reshape2
-Remotes: git::https://134.115.48.123/gitea/jul/rldx, 
-    phenological/nmr-parser,
+Remotes: phenological/nmr-parser,
     phenological/ms-parser,
 Depends: 
     R (>= 4.1)

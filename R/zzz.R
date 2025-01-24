@@ -14,7 +14,7 @@ if (length(rldx_check) == 2) {
 } else {
   message(cat(crayon::yellow("Try installing rldx package using: \n")))
   message(cat(crayon::yellow("remotes::install_url('https://134.115.48.123/gitea/jul/rldx/archive/main.tar.gz')")))
-  # remotes::install_url("https://takecare.mylims.org/gitea/jul/rldx/archive/main.tar.gz")
+  # remotes::install_url("https://134.115.48.123/gitea/jul/rldx/archive/main.tar.gz")
   # ipkgs <- installed.packages()
   # rldx_check <- ipkgs[grep("rldx", ipkgs[,1]), c(1,3)]
   # message(cat(crayon::yellow("rldx version:", rldx_check[2], "has been installed.")))
