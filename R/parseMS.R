@@ -1,7 +1,7 @@
 #' parseMS
 #'
 #' @param folder Either character (file path) to folder/file or a data frame from a mass spec rolodex.
-#' @param assay character for mass spec assay. Must be one of "AA", "TRY", "BA", "SCFA".
+#' @param assay character for mass spec assay. Must be one of "ddhN", "AA", "TRY", "BA", "SCFA".
 #' @param fileType character for file type if folder argument is a path to a folder/file.
 #' Must be "txt", "tsv" or "xml".
 #' @param optns List for extra arguments
@@ -33,13 +33,16 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
   }
 
   #####fileType#####
-  if(tolower(fileType) == "xml"){
-    pattern = "\\.xml$"
-  }else if(tolower(fileType) == "txt"){
-    pattern = "\\.txt$"
-  }else if(tolower(fileType) == "tsv"){
-    pattern = "\\.TSV$"
-  }else{stop("must provide the fileType argument correctly")}
+
+  if(is(folder)[1] == "character"){
+    if(tolower(fileType) == "xml"){
+      pattern = "\\.xml$"
+    }else if(tolower(fileType) == "txt"){
+      pattern = "\\.TXT$"
+    }else if(tolower(fileType) == "tsv"){
+      pattern = "\\.TSV$"
+    }else{stop("must provide the fileType argument correctly")}
+  }
 
   ####read#####
   if(is(folder)[1] != "data.frame" && is(folder)[1] == "character"){
@@ -143,32 +146,38 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
   #original sampleIDs
   original_sampleIDs <- lapply(obsDescr, function(df) df$sampleID)
 
-  #######make .Data########
-  idx <- which(result$paramName == "Quantity")
-  newData <- dcast(result[ idx,],
-                   AnalysisName + sampleID ~ AnalyteName,
-                   value.var = "paramValue")
-
-  reference_sampleID <- obsDescr[[1]]$sampleID
-
-  #ensure in same order as obsDescr
-  newData_ordered <- newData[match(reference_sampleID, newData$sampleID), ]
-  rownames(newData_ordered) <- seq_len(nrow(newData_ordered))
-
-  if (all(newData_ordered$sampleID == reference_sampleID)) {
-    cat("The sampleID in newData_ordered is in the same order as reference_sampleID.\n")
-  } else {
-    cat("The sampleID in newData_ordered does NOT match the order of reference_sampleID.\n")
-
-    # Optionally, show mismatches
-    mismatch_indices <- which(newData_ordered$sampleID != reference_sampleID)
-    cat("Mismatches at rows:", mismatch_indices, "\n")
-  }
-
   #####fix duplicated sampleIDs for all non samples (ltrs, qc, blanks etc)######
   for(i in seq_along(obsDescr)){
 
     df <- obsDescr[[i]]
+
+    #if -rerun instead of _rerun
+    if (any(grepl("-rerun", df$AnalysisName, ignore.case = TRUE))) {
+      result$AnalysisName <- gsub(pattern = "-rerun", replacement = "_rerun", x = result$AnalysisName,
+                                  ignore.case = FALSE)
+    }
+
+    #counter at end of analysis name
+    df$plateExperimentID <- sapply(strsplit(df$AnalysisName, "_"), function(parts) {
+      idx <- length(parts)
+
+      # Loop backwards through the parts until we find a numeric value
+      while (idx > 0) {
+        # Suppress warnings during the integer conversion attempt
+        num <- suppressWarnings(as.integer(parts[idx]))
+
+        if (!is.na(num)) {
+          return(num)
+        }
+
+        # Move to the previous part if current part is not numeric
+        idx <- idx - 1
+      }
+
+      # Return NA if no numeric value is found
+      return(NA)
+    })
+
 
     # Identify duplicated sampleIDs where sampleType is not "sample"
     idx <- which(duplicated(df$sampleID) & df$sampleType != "sample")
@@ -192,19 +201,43 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
 
     if(length(idx) > 0){
 
-      # Loop through each duplicated sampleID and modify it
       for (id in idx) {
-        # Split AnalysisName by underscore
-        parts <- strsplit(df$AnalysisName[id], "_")[[1]]
-        end <- length(parts)
-        num_part <- suppressWarnings(as.integer(parts[end]))
-        if (is.na(num_part)) {
-          # Append the numeric part to sampleID and break out of the loop
-          df$sampleID[id] <- paste0(df$sampleID[id], ".", parts[end])
-        }
-
+        # Append the numeric part to sampleID and break out of the loop
+        df$sampleID[id] <- paste0(df$sampleID[id], "#", df$plateExperimentID[id])
       }
+
     }
+
+    #any duplicates left
+    idx <- which(duplicated(df[["sampleID"]]) |
+                   duplicated(df[["sampleID"]], fromLast = TRUE))
+    for (id in idx) {
+    # Loop through each duplicated sampleID and modify it
+    for (id in idx) {
+      # Split AnalysisName by underscore
+      parts <- strsplit(df$AnalysisName[id], "_")[[1]]
+      end <- length(parts)
+      num_part <- suppressWarnings(as.integer(parts[end]))
+      if (is.na(num_part)) {
+        # Append the rerun part to sampleID and break out of the loop
+        df$sampleID[id] <- paste0(df$sampleID[id], ".", parts[end])
+      }
+
+    }
+    }
+    #any duplicated left add plateID
+    idx <- which(duplicated(df[["sampleID"]]) |
+                   duplicated(df[["sampleID"]], fromLast = TRUE))
+    if(length(idx) > 0){
+
+      for (id in idx) {
+        # Append the numeric part to sampleID and break out of the loop
+        df$sampleID[id] <- paste0(df$sampleID[id], "#", df$plateID[id])
+      }
+
+    }
+
+
 
     #are there duplicates left, print them
     idx <- which(duplicated(df[["sampleID"]]) |
@@ -216,6 +249,45 @@ parseMS <- function(folder, assay, fileType = NULL, optns = list()) {
     }
   }
 
+  reference_sampleID <- obsDescr[[1]]$sampleID
+
+  # Create an empty list to store the data
+  data_list <- lapply(obsDescr, function(obs) {
+    # Extract AnalyteName, sampleID, and Quantity
+    data.frame(
+      sampleID = obs$sampleID,
+      Quantity = obs$Quantity,
+      AnalyteName = obs$AnalyteName
+    )
+  })
+
+  # Combine all data frames into a single data frame
+  combined_data <- do.call(rbind, data_list)
+
+  # Reshape the data to make AnalyteName columns and sampleID rows
+  newData <- suppressWarnings( reshape(
+    combined_data,
+    timevar = "AnalyteName",
+    idvar = "sampleID",
+    direction = "wide"
+  ))
+
+  # Clean column names to remove "Quantity." prefix
+  colnames(newData) <- gsub("Quantity\\.", "", colnames(newData))
+
+  #ensure in same order as obsDescr
+  newData_ordered <- newData[match(reference_sampleID, newData$sampleID), ]
+  rownames(newData_ordered) <- seq_len(nrow(newData_ordered))
+
+  if (all(newData_ordered$sampleID == reference_sampleID)) {
+    cat("The sampleID in newData_ordered is in the same order as reference_sampleID.\n")
+  } else {
+    cat("The sampleID in newData_ordered does NOT match the order of reference_sampleID.\n")
+
+    # Optionally, show mismatches
+    mismatch_indices <- which(newData_ordered$sampleID != reference_sampleID)
+    cat("Mismatches at rows:", mismatch_indices, "\n")
+  }
   #drop sampleID and AnalysisName
   newData_ordered <- newData_ordered[ , -which(names(newData_ordered) %in% c("AnalysisName","sampleID"))]
 
