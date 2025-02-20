@@ -284,12 +284,11 @@ parseNMR <- function(folder,
             which(ppm >= min(ppm) & ppm <= 0.4),
             which(ppm >= 9.5 & ppm <= max(ppm)))
 
-
-
     trimmedSpectra <- dat[,-idx, drop = FALSE]
     trimmedPpm <- ppm[-idx]
+    dw <- trimmedPpm[2]-trimmedPpm[1]
 
-    trimmedSpectra <- baseline.corr(trimmedSpectra)
+    # trimmedSpectra <- baseline.corr(trimmedSpectra)
     trimmedSpectra <- data.frame(trimmedSpectra)
 
     # check for 180 flip
@@ -321,22 +320,22 @@ parseNMR <- function(folder,
     dat <- data.frame(
       SPC_All = apply(
         trimmedSpectra[, which((trimmedPpm > 3.18) & ( trimmedPpm < 3.32))], 1, sum
-      ),
+      ) * dw,
       SPC3 = apply(
         trimmedSpectra[, which((trimmedPpm > 3.262) & ( trimmedPpm < 3.3))], 1, sum
-      ),
+      ) * dw,
       SPC2 = apply(
         trimmedSpectra[, which((trimmedPpm >= 3.236) & ( trimmedPpm < 3.262))], 1, sum
-      ),
+      ) * dw,
       SPC1 = apply(
         trimmedSpectra[, which((trimmedPpm >= 3.2) & ( trimmedPpm < 3.236))], 1, sum
-      ),
+      ) * dw,
       Glyc_All = apply(
         trimmedSpectra[, which((trimmedPpm > 2.050) & ( trimmedPpm < 2.118))], 1, sum
-      ),
+      ) * dw,
       GlycA = apply(
         trimmedSpectra[, which((trimmedPpm > 2.050) & ( trimmedPpm < 2.089))], 1, sum
-      ),
+      ) * dw,
       GlycB = apply(
         trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
       )

@@ -42,8 +42,8 @@
 #
 # test_that("test parsing spcglyc anpc from local folders", {
 #
-#   folder <- c("~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
-#               "~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
+#   folder <- c("~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
+#               "~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
 #
 #   parseNMR(folder,
 #            opts = list(what = c("spcglyc"),
@@ -52,12 +52,31 @@
 #                        runName = "COVr49",
 #                        method = "noesy",
 #                        sampleMatrixType = "SER",
-#                        specOpts = list(uncalibrate = FALSE,
+#                        specOpts = list(uncalibrate = TRUE,
 #                                        fromTo = c(-0.1, 10),
 #                                        length.out = 44079),
 #                        outputDir = "."))
 #
-#   var <- local(get(load("./covid19_mauritius_SER_COVr49@local_noesy@prof-plasma-noesy.daE")))
+#   spcglyc <- local(get(load("./covid19_mauritius_SER_COVr49@local_spcglyc.daE")))
+#
+#   parseNMR(folder,
+#            opts = list(what = c("brxpacs"),
+#                        projectName = "covid19",
+#                        cohortName = "mauritius",
+#                        runName = "COVr49",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = TRUE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "."))
+#
+#   brxpacs <- local(get(load("./covid19_mauritius_SER_COVr49@local_brxpacs.daE")))
+#   new <- matchAll(list(brxpacs, spcglyc))
+#   identical(new[[1]]@obsDescr[[1]]$sampleID, new[[2]]@obsDescr[[1]]$sampleID)
+#   cbind(new[[1]]@obsDescr[[1]]$dataPath, new[[2]]@obsDescr[[1]]$dataPath)
+#
+#   spcglyc@.Data[1,6]
 #
 #
 #   expect_equal(nrow(var), 134)
