@@ -338,7 +338,7 @@ parseNMR <- function(folder,
       ) * dw,
       GlycB = apply(
         trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
-      )
+      ) * dw
     )
 
     dat$SPC3_2 <- dat$SPC3 / dat$SPC2
