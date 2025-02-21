@@ -31,18 +31,13 @@
 #'   
 #'
 
-
-checkRun<-function(runID = "SPTr04", by = "row",ltr = "both"){
-  request = paste0("?runName=",runID)
+checkRun<-function(runName = "SPTr04", by = "row",ltr = "both"){
+  request = paste0("?runName=",runName)
   ## ltr =sltr, ltr = both
   expect = paste0(request, "&as=",by,"&sltr=",ltr)
-  loe = rldx_get("link", request)
+  loe = rldx_get(route = "link", request = request)
   loe<-loe$content$list
-  # expected = rldx_get("layoutByRunName", request)
-  # expected = rldx_get("layoutByRunName", paste0(request, "&as=row"))
-  # expected = rldx_get("layoutByRunName", paste0(request, "&as=row&sltr=sltr"))
-  expected = rldx_get("layoutByRunName", expect)
-  
+  expected = rldx_get(service = "",route = "layoutByRunName", expect)
   expected = expected$content[,c("sampleID", "sourceName","plateName","expno")]  
   expected$expname<-paste0(expected$plateName,"/",expected$expno,"-",expected$sampleID)
   loe_names<-names(loe)
