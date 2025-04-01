@@ -30,6 +30,9 @@
 #' for zggppezf, the EXPNO - 2 to match the 1D dataPath
 #'   
 #'
+#'runName = "CDOr07"
+#'by = "row"
+#'ltr = "both"
 
 checkRun<-function(runName = "SPTr04", by = "row",ltr = "both"){
   request = paste0("?runName=",runName)
@@ -56,7 +59,8 @@ checkRun<-function(runName = "SPTr04", by = "row",ltr = "both"){
               by.y = "check",
               all = T)
   rm(tdf)
-  tdf1<-tdf1[!is.na(tdf1$sampleName),]
+  
+  # tdf1<-tdf1[!is.na(tdf1$expname),]
   
   qc <-readExperiment(loe$noesygppr1d$dataPath, list(what = c("acqus")))
   
@@ -120,13 +124,27 @@ checkRun<-function(runName = "SPTr04", by = "row",ltr = "both"){
     last_number_decreased <- as.numeric(parts$number) - 1
     # Concatenate the parts back together
     tdf$dataPath <- paste0(parts$prefix, last_number_decreased)
+    tdf$plateID<-sapply(strsplit(tdf$dataPath,"/"),"[",6)
+    tdf$plateID<-sapply(strsplit(tdf$plateID,"_"),"[",6)
+    tdf$EXPNO<-sapply(strsplit(tdf$dataPath,"/"),"[",7)
+    tdf$check = paste0(tdf$plateID,"/",tdf$EXPNO,"-",tdf$sampleName)  
     
     tdf1 <- merge(tdf1,
-                  tdf[, c("dataPath", i)],
-                  by.x = "dataPath",
-                  by.y = "dataPath",
-                  all = T)
-    rm(i,tdf,parts, last_number_decreased)
+                   tdf[, c("check", i)],
+                   by.x = "expname",
+                   by.y = "check",
+                   all = T)
+    tdf_red<-tdf[-which(tdf$check %in% tdf1$expname),]
+    
+    if(dim(tdf_red)[1]>0){
+      tdf1 <- merge(tdf1,
+                    tdf_red[, c("dataPath", i)],
+                    by.x = "dataPath",
+                    by.y = "dataPath",
+                    all = T)
+    }
+
+    rm(i,tdf,parts,tdf_red, last_number_decreased)
   }
   if(length(grep("zggppezf",loe_names))>0){
     i<-loe_names[grep("zggppezf",loe_names)]
@@ -138,18 +156,34 @@ checkRun<-function(runName = "SPTr04", by = "row",ltr = "both"){
     last_number_decreased <- as.numeric(parts$number) - 2
     # Concatenate the parts back together
     tdf$dataPath <- paste0(parts$prefix, last_number_decreased)
+    tdf$dataPath <- paste0(parts$prefix, last_number_decreased)
+    tdf$plateID<-sapply(strsplit(tdf$dataPath,"/"),"[",6)
+    tdf$plateID<-sapply(strsplit(tdf$plateID,"_"),"[",6)
+    tdf$EXPNO<-sapply(strsplit(tdf$dataPath,"/"),"[",7)
+    tdf$check = paste0(tdf$plateID,"/",tdf$EXPNO,"-",tdf$sampleName)  
+    
     tdf1 <- merge(tdf1,
-                  tdf[, c("dataPath", i)],
-                  by.x = "dataPath",
-                  by.y = "dataPath",
+                  tdf[, c("check", i)],
+                  by.x = "expname",
+                  by.y = "check",
                   all = T)
-    rm(tdf,parts, last_number_decreased)
+    tdf_red<-tdf[-which(tdf$check %in% tdf1$expname),]
+    
+    if(dim(tdf_red)[1]>0){
+      tdf1 <- merge(tdf1,
+                    tdf_red[, c("dataPath", i)],
+                    by.x = "dataPath",
+                    by.y = "dataPath",
+                    all = T)
+    }
+    
+    rm(i,tdf,parts,tdf_red, last_number_decreased)
   }
 
-  # remove the ltr/sltrs 
-  tdf1<-tdf1[which(!is.na(tdf1$sampleName)),]
-  tdf1$reruns<-"No"
-  tdf1$reruns[which(duplicated(tdf1$sampleName)==TRUE)]<-"Yes"
+  # # remove the ltr/sltrs 
+  # tdf1<-tdf1[which(!is.na(tdf1$sampleName)),]
+  # tdf1$reruns<-"No"
+  # tdf1$reruns[which(duplicated(tdf1$sampleName)==TRUE)]<-"Yes"
   
   return(tdf1)
 }

@@ -5,11 +5,9 @@
 \title{checkRun
 collect information if the 1D, CPMG, PGPE has been run, Bruker Report (QC, LIPO, Quant, PACS) has been generated for each samples/ltr as planned or not.}
 \usage{
-checkRun(runID = "SPTr04", by = "row", ltr = "both")
+checkRun(runName = "SPTr04", by = "row", ltr = "both")
 }
 \arguments{
-\item{runID}{to link between the server and the expected}
-
 \item{by}{the order of the EXPNO default is by row and alternative is "column"}
 
 \item{ltr}{to consider ltr and/or sltr when calculating the EXPNO.
@@ -17,6 +15,8 @@ default is ltr = "both" assuming 4 ltr and 4 sltr per plate.
 if ltr = "sltr" meaning the plate has 0 ltr but 4 sltr per plate
 if ltr = "ltr" meaning the plate has 4 ltr and 0 sltr per plate
 if ltr = "none" meaning 0 ltr and 0 sltr per plate}
+
+\item{runID}{to link between the server and the expected}
 }
 \value{
 tdf1
@@ -36,6 +36,10 @@ only if the qc report exists, lipo, quant, pacs report will also get checked.
 once the 1D run has been checked then cpmg and the pgpe (zggppezf) run will be checked if exist.
 for cpmg the EXPNO - 1 to match the 1D dataPath
 for zggppezf, the EXPNO - 2 to match the 1D dataPath
+
+runName = "CDOr07"
+by = "row"
+ltr = "both"
 }
 \description{
 #'

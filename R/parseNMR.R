@@ -3,7 +3,6 @@
 #' @param opts - opts (what(spec, brxlipo, prxpacs, brxsm, spcglyc), specOpts(procno, uncalibrate, fromTo, length.out))
 #' @export
 #' @importFrom nmr.parser scanFolder readExperiment
-#' @importFrom rldx rldx_get
 #' @importFrom utils menu
 # req <- rldx_get("link", "?runName=EXTr01")
 # folder <- req
