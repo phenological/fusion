@@ -612,7 +612,6 @@ parseNMR <- function(folder,
                     collapse = "; ")
 
 
-  if (!noWrite) {
   # create dataElement
   da <- new("dataElement",
             .Data = dat,
@@ -622,6 +621,7 @@ parseNMR <- function(folder,
             method = opts$method,
             version = version)
 
+  if (!noWrite) {
   fileName <- paste(c(opts$projectName,
                       opts$cohortName,
                       opts$sampleMatrixType,
@@ -639,9 +639,9 @@ parseNMR <- function(folder,
   message(cat(crayon::blue(txt)))
   } else {
 
-    res <- cbind(dataPath = loe$dataPath, dat)
+    # res <- cbind(dataPath = loe$dataPath, dat)
 
-    return(res)
+    return(da)
 
   }
 }
