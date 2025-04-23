@@ -138,7 +138,7 @@ parseNMR <- function(folder,
     }
 
     if (opts$projectName == "") {
-      req <- rldx_get("projects/", "?un=1")
+      req <- rldx_get(route = "projects/", request = "?un=1")
       choices <- paste0(req$content$name,
                         ": ", req$content$prefix)
       choice <- menu(choices, title = "Choose a project.")
@@ -155,7 +155,7 @@ parseNMR <- function(folder,
     }
 
     if (opts$cohortName == "") {
-      req <- rldx_get("projects/", paste0(projectId, "/cohorts?un=1"))
+      req <- rldx_get(route = "projects/", request = paste0(projectId, "/cohorts?un=1"))
       choices <- paste0(req$content$cohortName,
                         ": ", req$content$description)
       choice <- menu(choices, title = "Choose a cohort.")
@@ -180,7 +180,7 @@ parseNMR <- function(folder,
     }
 
     if (opts$sampleMatrixType == "") {
-      req <- rldx_get("matrices/", "?un=1")
+      req <- rldx_get(route = "matrices/", request = "?un=1")
       choices <- paste0(req$content$matrixName,
                         ": ", req$content$matrixDescription)
       choice <- menu(choices, title = "Choose matrix.")
