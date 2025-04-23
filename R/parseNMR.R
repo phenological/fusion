@@ -19,6 +19,7 @@ parseNMR <- function(folder,
                                                  uncalibrate = FALSE,
                                                  fromTo = c(-0.1, 10),
                                                  length.out = 44079),
+                                 EXP = "",
                                  outputDir = ".")) {
   .SD <- NULL
   noWrite <- FALSE
@@ -53,6 +54,7 @@ parseNMR <- function(folder,
   } else {
     spcglyc <- FALSE
   }
+
 
   if (!("outputDir" %in% names(opts))) {
     opts$outputDir <- "."
@@ -187,7 +189,10 @@ parseNMR <- function(folder,
       sampleMatrixType <- opts$sampleMatrixType
     }
 
+
     lof <- scanFolder(folder, opts)
+
+
     EXP <- nmr.parser::cleanNames(lof$EXP[1])
     if (!is.na(lof$USERA2[1]) & !(lof$USERA2[1] == "")) {
 
