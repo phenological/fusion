@@ -8,19 +8,7 @@
 # folder <- req
 # parseNMR(folder)
 
-parseNMR <- function(folder,
-                     opts = list(what = c("spec"),
-                                 projectName = "",
-                                 cohortName = "",
-                                 runName = "",
-                                 method = "",
-                                 sampleMatrixType = "",
-                                 specOpts = list(procno = 1,
-                                                 uncalibrate = FALSE,
-                                                 fromTo = c(-0.1, 10),
-                                                 length.out = 44079),
-                                 EXP = "",
-                                 outputDir = ".")) {
+parseNMR <- function(folder, opts = NULL) {
   .SD <- NULL
   noWrite <- FALSE
 
@@ -28,23 +16,35 @@ parseNMR <- function(folder,
   # CONFIGURATION
   ########################################################################
 
-  if (!exists("opts")) {
-    opts <- list()
+
+  # Define default options
+  default_opts <- list(
+    what = c("spec"),
+    projectName = "",
+    cohortName = "",
+    runName = "",
+    method = "",
+    sampleMatrixType = "",
+    specOpts = list(
+      procno = 1,
+      uncalibrate = FALSE,
+      fromTo = c(-0.1, 10),
+      length.out = 44079
+    ),
+    EXP = "",
+    outputDir = "."
+  )
+
+  # Merge provided options with defaults
+  if (is.null(opts)) {
+    opts <- default_opts
+  } else {
+    # Handle nested specOpts separately
+    if ("specOpts" %in% names(opts) && !is.null(opts$specOpts)) {
+      opts$specOpts <- modifyList(default_opts$specOpts, opts$specOpts)
+    }
+    opts <- modifyList(default_opts, opts)
   }
-
-
-  if (!("what" %in% names(opts))) {
-    opts$what <- "spec"
-  }
-
-
-
-  if (!("specOpts" %in% names(opts))) {
-    opts$specOpts <- list(uncalibrate = FALSE,
-                          fromTo = c(-0.1, 10),
-                          length.out = 44079)
-  }
-
 
   # if spcglyc spectra must be read first
   if (opts$what == "spcglyc") {
@@ -54,12 +54,6 @@ parseNMR <- function(folder,
   } else {
     spcglyc <- FALSE
   }
-
-
-  if (!("outputDir" %in% names(opts))) {
-    opts$outputDir <- "."
-  }
-
 
 
   if (all(c("content", "totalCount") %in% names(folder))) {

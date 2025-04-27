@@ -1,7 +1,7 @@
 # test_that("test parsing lipo anpc from local folders", {
 #
-#   folder <- c("~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
-#               "~/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
+#   folder <- c("~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
+#               "~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
 #
 #   parseNMR(folder,
 #            opts = list(what = c("brxlipo"),
@@ -16,7 +16,6 @@
 #                        outputDir = "."))
 #
 #   var <- local(get(load("./covid19_mauritius_SER_COVr49@local_brxlipo.daE")))
-#
 #
 #
 #   expect_equal(nrow(var), 134)
