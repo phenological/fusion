@@ -4,12 +4,7 @@
 \alias{parseNMR}
 \title{reads all information from bruker folder structures}
 \usage{
-parseNMR(
-  folder,
-  opts = list(what = c("spec"), projectName = "", cohortName = "", runName = "", method =
-    "", sampleMatrixType = "", specOpts = list(procno = 1, uncalibrate = FALSE, fromTo =
-    c(-0.1, 10), length.out = 44079), outputDir = ".")
-)
+parseNMR(folder, opts = NULL)
 }
 \arguments{
 \item{folder}{\itemize{

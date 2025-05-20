@@ -279,8 +279,8 @@ parseNMR <- function(folder, opts = NULL) {
   if (spcglyc) {
 
     idx = c(which(ppm >= 4.6 & ppm <= 4.85),
-            which(ppm >= min(ppm) & ppm <= 0.4),
-            which(ppm >= 9.5 & ppm <= max(ppm)))
+            which(ppm >= min(ppm) & ppm <= 0.2),
+            which(ppm >= 10.0))
 
     trimmedSpectra <- dat[,-idx, drop = FALSE]
     trimmedPpm <- ppm[-idx]
@@ -336,13 +336,19 @@ parseNMR <- function(folder, opts = NULL) {
       ) * dw,
       GlycB = apply(
         trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
-      ) * dw
+      ) * dw,
+      alb1<- apply(
+        trimmedSpectra[, which((trimmedPpm > 0.2) & ( trimmedPpm < 0.7))], 1, sum
+      ) * dw,
+      alb2<- apply(
+        trimmedSpectra[, which((trimmedPpm > 6.0) & ( trimmedPpm < 10.0))], 1, sum
+      ) * dw,
     )
 
     dat$SPC3_2 <- dat$SPC3 / dat$SPC2
     dat$SPC_Glyc <- dat$SPC_All / dat$Glyc_All
     varName <- colnames(dat)
-    opts$method <- "spcglyc"
+    opts$method <- paste0("spcglyc_", loe$experiment[1])
     type = "QUANT"
 
     # we correct for 3mm tubes
