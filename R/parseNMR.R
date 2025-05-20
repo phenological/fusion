@@ -342,7 +342,7 @@ parseNMR <- function(folder, opts = NULL) {
       ) * dw,
       alb2<- apply(
         trimmedSpectra[, which((trimmedPpm > 6.0) & ( trimmedPpm < 10.0))], 1, sum
-      ) * dw,
+      ) * dw
     )
 
     dat$SPC3_2 <- dat$SPC3 / dat$SPC2
