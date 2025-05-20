@@ -34,6 +34,7 @@ parseNMR <- function(folder, opts = NULL) {
     EXP = "",
     outputDir = "."
   )
+  
 
   # Merge provided options with defaults
   if (is.null(opts)) {
@@ -69,19 +70,19 @@ parseNMR <- function(folder, opts = NULL) {
     lop <- lop[[choice]]
 
 
-    if (!("projectName" %in% names(opts))) {
+    if (opts$projectName == "") {
       opts$projectName <- unique(lop$projectName[!is.na(lop$projectName)])[1]
     }
 
-    if (!("cohortName" %in% names(opts))) {
+    if (opts$cohortName == "") {
       opts$cohortName <- unique(lop$cohortName[!is.na(lop$cohortName)])[1]
     }
 
-    if (!("runName" %in% names(opts))) {
+    if (opts$runName == "" ) {
       opts$runName <- unique(lop$runName[!is.na(lop$runName)])[1]
     }
 
-    if (!("sampleMatrixType" %in% names(opts))) {
+    if (opts$sampleMatrixType == "") {
       opts$sampleMatrixType <- unique(lop$sampleMatrixType[!is.na(lop$sampleMatrixType)])[1]
     }
 
@@ -337,10 +338,10 @@ parseNMR <- function(folder, opts = NULL) {
       GlycB = apply(
         trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
       ) * dw,
-      alb1<- apply(
+      alb1 = apply(
         trimmedSpectra[, which((trimmedPpm > 0.2) & ( trimmedPpm < 0.7))], 1, sum
       ) * dw,
-      alb2<- apply(
+      alb2 = apply(
         trimmedSpectra[, which((trimmedPpm > 6.0) & ( trimmedPpm < 10.0))], 1, sum
       ) * dw
     )
