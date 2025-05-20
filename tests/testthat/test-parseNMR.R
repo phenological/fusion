@@ -1,5 +1,86 @@
 # test_that("test parsing lipo anpc from local folders", {
 #
+#
+#   folder <- list(dataPath = c("~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10"))
+#
+#   lipo <- parseNMR(folder,
+#            opts = list(what = c("spcglyc"),
+#                        projectName = "projectName_",
+#                        cohortName = "cohortName_",
+#                        runName = "runName_",
+#                        method = "method_",
+#                        sampleMatrixType = "sampleMatrixType_",
+#                        specOpts = list(uncalibrate = FALSE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "outputDir_"))
+#
+#
+#
+# })
+
+# test_that("test parsing spcglyc anpc from local folders", {
+#
+#   folder <- c("~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
+#               "~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
+#
+#   parseNMR(folder,
+#            opts = list(what = c("spcglyc"),
+#                        projectName = "covid19",
+#                        cohortName = "mauritius",
+#                        runName = "COVr49",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = TRUE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "."))
+#
+#   spcglyc <- local(get(load("./covid19_mauritius_SER_COVr49@local_spcglyc.daE")))
+#
+#   parseNMR(folder,
+#            opts = list(what = c("brxpacs"),
+#                        projectName = "covid19",
+#                        cohortName = "mauritius",
+#                        runName = "COVr49",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = TRUE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079),
+#                        outputDir = "."))
+#
+#   brxpacs <- local(get(load("./covid19_mauritius_SER_COVr49@local_brxpacs.daE")))
+#   new <- matchAll(list(brxpacs, spcglyc))
+#   identical(new[[1]]@obsDescr[[1]]$sampleID, new[[2]]@obsDescr[[1]]$sampleID)
+#   cbind(new[[1]]@obsDescr[[1]]$dataPath, new[[2]]@obsDescr[[1]]$dataPath)
+#
+#   spcglyc@.Data[1,6]
+#
+#
+#   expect_equal(nrow(var), 134)
+#   expect_equal(ncol(var), 9)
+#   expect_length(var@obsDescr, 6)
+#   expect_equal(names(var@obsDescr$test_tests_value)[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr$test_tests_value), 23)
+#   expect_equal(names(var@obsDescr[[5]])[23], "isopropanol-in-mmol-l")
+#   expect_length(names(var@obsDescr[[5]]), 23)
+#   expect_equal(names(var@obsDescr[[6]])[23], "lb-test")
+#   expect_length(names(var@obsDescr[[6]]), 25)
+#   expect_equal(var@obsDescr[[2]]$ereticFactor[2], 3731.2157)
+#   expect_equal(var@obsDescr[[1]]$sampleID[1], "COV17110")
+#   expect_equal(var@obsDescr[[1]]$dataPath[1], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10")
+#   expect_equal(as.numeric(var[1,1]), 21969.7195)
+#   expect_equal(as.numeric(var[1,9]), 30.720518)
+#   expect_equal(var@obsDescr[[1]]$sampleID[134], "sltr#7")
+#   expect_equal(var@obsDescr[[1]]$dataPath[134], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/90")
+#   expect_equal(as.numeric(var[134,1]), 17971.6843)
+#   expect_equal(as.numeric(var[134,9]), 1.0758759)
+#
+# })
+
+# test_that("test parsing lipo anpc from local folders", {
+#
 #   folder <- c("~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/",
 #               "~/data/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp295/")
 #
@@ -98,7 +179,6 @@
 #   expect_equal(as.numeric(var[134,9]), 1.0758759)
 #
 # })
-
 
 # test_that("test parsing spcglyc anpc from local folders", {
 #
