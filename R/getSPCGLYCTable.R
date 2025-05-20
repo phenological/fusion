@@ -2,7 +2,7 @@
 getSPCGLYCTable <- function() {
 
   data.frame(Name = c('SPC_All','SPC3','SPC2','SPC1','Glyc_All',
-                      'GlycA','GlycB','SPC3_2','SPC_Glyc'),
+                      'GlycA','GlycB','SPC3_2','SPC_Glyc', 'Alb1', 'Alb2'),
              Unit = "a.u",
              `Max Value (ref.)` = NA,
              `Min Value (ref.)` = NA,
@@ -16,7 +16,9 @@ getSPCGLYCTable <- function() {
                              "Integral from 2.050 to 2.089 ppm",
                              "Integral from 2.089 to 2.118 ppm",
                              "Ratio of SPC3 / SPC2",
-                             "Ratio of SPC_All / Glyc_All"),
+                             "Ratio of SPC_All / Glyc_All",
+                             "Integral from 0.2 to 0.7 ppm",
+                             "Ingegral from 6.0 to 10.0 ppm"),
              check.names = FALSE)
 }
 
