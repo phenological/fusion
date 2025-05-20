@@ -34,7 +34,7 @@ parseNMR <- function(folder, opts = NULL) {
     EXP = "",
     outputDir = "."
   )
-  
+
 
   # Merge provided options with defaults
   if (is.null(opts)) {
@@ -338,10 +338,10 @@ parseNMR <- function(folder, opts = NULL) {
       GlycB = apply(
         trimmedSpectra[, which((trimmedPpm >= 2.089) & ( trimmedPpm < 2.118))], 1, sum
       ) * dw,
-      alb1 = apply(
+      Alb1 = apply(
         trimmedSpectra[, which((trimmedPpm > 0.2) & ( trimmedPpm < 0.7))], 1, sum
       ) * dw,
-      alb2 = apply(
+      Alb2 = apply(
         trimmedSpectra[, which((trimmedPpm > 6.0) & ( trimmedPpm < 10.0))], 1, sum
       ) * dw
     )
